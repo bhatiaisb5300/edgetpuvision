@@ -68,7 +68,7 @@ def make_get_color(color, labels):
 
     return lambda obj_id: 'white'
 
-def overlay(title, objs, get_color, inference_time, inference_rate, layout):
+def overlay(title, result, inference_time, inference_rate, layout):
     x0, y0, width, height = layout.window
 
     defs = svg.Defs()
@@ -79,41 +79,8 @@ def overlay(title, objs, get_color, inference_time, inference_rate, layout):
                   font_size='1em', font_family='monospace', font_weight=500)
     doc += defs
 
-    for obj in objs:
-        percent = int(100 * obj.score)
-        if obj.label:
-            caption = '%d%% %s' % (percent, obj.label)
-        else:
-            caption = '%d%%' % percent
-
-        x, y, w, h = obj.bbox.scale(*layout.size)
-        color = get_color(obj.id)
-
-        doc += svg.Rect(x=x, y=y, width=w, height=h,
-                        style='stroke:%s' % color, _class='bbox')
-        doc += svg.Rect(x=x, y=y+h ,
-                        width=size_em(len(caption)), height='1.2em', fill=color)
-        #center
-        center = ((x+w/2),(y+h/2))
-        doc += svg.Circle(cx=center[0],cy=center[1],r=5, style='stroke:%s' % color)
-
-        centerPts.append(center)
-
-        for i in range(1, len(centerPts)):
-            doc += svg.Line(x1=centerPts[i-1][0],y1=centerPts[i-1][1],x2=centerPts[i][0],y2=centerPts[i][1], style='stroke:%s' % color)
-            #print(centerPts[i-1][0],centerPts[i-1][1])
-        #print(centerPts)
-
-        #corner
-        #doc += svg.Circle(cx=x,cy=y,r=10, style='stroke:%s' % color)
-
-        t = svg.Text(x=x, y=y+h, fill='black')
-        t += svg.TSpan(caption, dy='1em')
-        doc += t
-
-
-    ox, oy1, oy2 = x0 + 20, y0 + 20, y0 + height - 20
-
+    ox1, ox2 = x0 + 20, x0 + width - 20
+    oy1, oy2 = y0 + 20, y0 + height - 20
     # Title
     if title:
         doc += svg.Rect(x=ox, y=oy1,
@@ -125,15 +92,15 @@ def overlay(title, objs, get_color, inference_time, inference_rate, layout):
 
     # Info
     lines = [
-        'Objects: %d' % len(objs),
+        # 'Objects: %d' % len(objs),
         'Inference time: %.2f ms (%.2f fps)' % (inference_time * 1000, 1.0 / inference_time)
     ]
-    text_width = size_em(max(len(line) for line in lines))
-    doc += svg.Rect(x=0, y=0, width=text_width, height='2.2em',
+    # text_width = size_em(max(len(line) for line in lines))
+    doc += svg.Rect(x=0, y=0, height='2.2em',
                     transform='translate(%s, %s) scale(1,-1)' % (ox, oy2), _class='back')
     t = svg.Text(y=oy2, fill='white')
-    t += svg.TSpan(lines[0], x=ox)
-    t += svg.TSpan(lines[1], x=ox, dy='-1.2em')
+    # t += svg.TSpan(lines[0], x=ox)
+    # t += svg.TSpan(lines[1], x=ox, dy='-1.2em')
     doc += t
 
     return str(doc)
