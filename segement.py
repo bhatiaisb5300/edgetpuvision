@@ -21,9 +21,9 @@ from collections import deque
 
 # from edgetpu.detection.engine import DetectionEngine
 
-from . import svg
-from . import utils
-from .apps import run_app
+import svg
+import utils
+from apps import run_app
 
 import numpy as np
 from PIL import Image
