@@ -17,7 +17,7 @@ from enum import Enum
 from http.server import BaseHTTPRequestHandler
 from itertools import cycle
 
-from .proto import messages_pb2 as pb2
+from proto import messages_pb2 as pb2
 
 logger = logging.getLogger(__name__)
 
