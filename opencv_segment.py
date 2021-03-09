@@ -38,6 +38,7 @@ def main():
 
     while cap.isOpened():
         ret, frame = cap.read()
+        print(frame.shape)
         if not ret:
             break
         cv2_im = frame
