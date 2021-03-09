@@ -10,7 +10,7 @@ from pycoral.utils.edgetpu import run_inference
 
 def preprocess(img):
     img = cv2.resize(img, (336,112))
-    return (img).reshape(1,336,112,3).astype(np.uint8)
+    return (img).reshape(1,336,112,3).astype(np.int8)
 
 def main():
     default_model_dir = '/home/mendel/coral-test/'
@@ -41,8 +41,9 @@ def main():
         print(frame.shape)
         if not ret:
             break
-        cv2_im = frame
+#         cv2_im = frame
         frame = preprocess(frame)
+        print(frame.shape)
 #         cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
 #         cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size).astype(np.int8)
 #         input_tensor = np.asarray(cv2_im_rgb).flatten()
