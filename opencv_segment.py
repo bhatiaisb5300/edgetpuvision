@@ -7,10 +7,13 @@ from pycoral.adapters.detect import get_objects
 from pycoral.utils.dataset import read_label_file
 from pycoral.utils.edgetpu import make_interpreter
 from pycoral.utils.edgetpu import run_inference
+from pycoral.adapters import segment
+from pycoral.adapters import common
+from PIL import Image
 
-def preprocess(img):
-    img = cv2.resize(img, (336,112))
-    return (img).reshape(1,336,112,3).astype(np.int8)
+# def preprocess(img):
+#     img = cv2.resize(img, (336,112))
+#     return (img).reshape(1,336,112,3).astype(np.int8)
 
 def main():
     default_model_dir = '/home/mendel/coral-test/'
@@ -31,9 +34,9 @@ def main():
 #     print('Loading {} with {} labels.'.format(args.model, args.labels))
     interpreter = make_interpreter(args.model)
     interpreter.allocate_tensors()
-#     labels = read_label_file(args.labels)
-    inference_size = input_size(interpreter)
-
+    width, height = common.input_size(interpreter)
+    input_index = interpreter.get_input_details()[0]["index"]
+    output_index = interpreter.get_output_details()[0]["index"]
     cap = cv2.VideoCapture(args.camera_idx)
 
     while cap.isOpened():
@@ -42,14 +45,16 @@ def main():
         if not ret:
             break
 #         cv2_im = frame
-        frame = preprocess(frame)
-        print(frame.shape)
+        resized_img = frame.resize((336, 112), Image.ANTIALIAS)
+        common.set_input(interpreter, resized_img)
+        interpreter.invoke()
+        result = segment.get_output(interpreter)
 #         cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
 #         cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size).astype(np.int8)
 #         input_tensor = np.asarray(cv2_im_rgb).flatten()
 #         _, raw_result = engine.run_inference(input_tensor)
-        result = run_inference(interpreter, frame.tobytes())
-        print(result)
+#         result = run_inference(interpreter, frame.tobytes())
+#         print(result)
         print(result.shape)
 #         result = np.reshape(raw_result, inference_size)
 #         objs = get_objects(interpreter, args.threshold)[:args.top_k]
