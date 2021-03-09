@@ -8,6 +8,10 @@ from pycoral.utils.dataset import read_label_file
 from pycoral.utils.edgetpu import make_interpreter
 from pycoral.utils.edgetpu import run_inference
 
+def preprocess(img):
+    img = cv2.resize(img, (1344,448))
+    return (img).reshape(1,1344,448,3).astype(np.uint8)
+
 def main():
     default_model_dir = 'home/mendel/coral-test/'
     default_model = 'model1.tflite'
@@ -19,7 +23,7 @@ def main():
 #                         default=os.path.join(default_model_dir, default_labels))
 #     parser.add_argument('--top_k', type=int, default=3,
 #                         help='number of categories with highest score to display')
-    parser.add_argument('--camera_idx', type=int, help='Index of which video source to use. ', default = 0)
+    parser.add_argument('--camera_idx', type=int, help='Index of which video source to use. ', default = 1)
 #     parser.add_argument('--threshold', type=float, default=0.1,
 #                         help='classifier score threshold')
     args = parser.parse_args()
@@ -39,11 +43,11 @@ def main():
         cv2_im = frame
 
         cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
-        cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
-        input_tensor = np.asarray(cv2_im_rgb).flatten()
+        cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size).astype(np.int8)
+#         input_tensor = np.asarray(cv2_im_rgb).flatten()
 #         _, raw_result = engine.run_inference(input_tensor)
-        raw_result = run_inference(interpreter, input_tensor)
-        result = np.reshape(raw_result, inference_size)
+        result = run_inference(interpreter, cv2_im_rgb)
+#         result = np.reshape(raw_result, inference_size)
 #         objs = get_objects(interpreter, args.threshold)[:args.top_k]
 #         cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels)
 
