@@ -42,8 +42,8 @@ def main():
         cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
         input_tensor = np.asarray(cv2_im_rgb).flatten()
 #         _, raw_result = engine.run_inference(input_tensor)
-        result = np.reshape(raw_result, (height, width))
-        run_inference(interpreter, input_tensor)
+        raw_result = run_inference(interpreter, input_tensor)
+        result = np.reshape(raw_result, inference_size)
 #         objs = get_objects(interpreter, args.threshold)[:args.top_k]
 #         cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels)
 
