@@ -25,8 +25,8 @@ import svg
 import utils
 from apps import run_app
 
-# import numpy as np
-# from PIL import Image
+import numpy as np
+from PIL import Image
 
 # from pycoral.adapters import common
 # from pycoral.adapters import segment
