@@ -12,8 +12,8 @@ from pycoral.adapters import common
 from PIL import Image
 
 def preprocess(img):
-    img = cv2.resize(img, (112,336))
-    return (img).reshape(1,112,336,3).astype(np.int8)
+    img = cv2.resize(img, (336,112))
+    return (img).reshape(1,336,112,3).astype(np.int8)
 
 def main():
     default_model_dir = '/home/mendel/coral-test/'
