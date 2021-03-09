@@ -11,9 +11,9 @@ from pycoral.adapters import segment
 from pycoral.adapters import common
 from PIL import Image
 
-# def preprocess(img):
-#     img = cv2.resize(img, (336,112))
-#     return (img).reshape(1,336,112,3).astype(np.int8)
+def preprocess(img):
+    img = cv2.resize(img, (336,112))
+    return (img).reshape(1,336,112,3).astype(np.int8)
 
 def main():
     default_model_dir = '/home/mendel/coral-test/'
@@ -45,7 +45,7 @@ def main():
         if not ret:
             break
 #         cv2_im = frame
-        resized_img = frame.resize(336, 112).astype(np.int8)
+        resized_img = preprocess(frame)
         common.set_input(interpreter, resized_img)
         interpreter.invoke()
         result = segment.get_output(interpreter)
