@@ -19,7 +19,7 @@ import time
 
 from collections import deque
 
-# from edgetpu.detection.engine import DetectionEngine
+from edgetpu.detection.engine import BasicEngine
 
 import svg
 import utils
