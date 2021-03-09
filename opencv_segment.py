@@ -40,7 +40,7 @@ def main():
 
         cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
         cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
-        input_tensor = np.asarray(cv_im_rgb).flatten()
+        input_tensor = np.asarray(cv2_im_rgb).flatten()
 #         _, raw_result = engine.run_inference(input_tensor)
         result = np.reshape(raw_result, (height, width))
         run_inference(interpreter, input_tensor)
