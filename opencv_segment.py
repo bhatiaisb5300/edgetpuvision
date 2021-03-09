@@ -59,8 +59,8 @@ def main():
 #         result = np.reshape(raw_result, inference_size)
 #         objs = get_objects(interpreter, args.threshold)[:args.top_k]
 #         cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels)
-
-        cv2.imshow('frame', result.reshape(112*2,336*2))
+        result = cv2.resize(result,(112*2,336*2))
+        cv2.imshow('frame', result)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
