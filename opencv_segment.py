@@ -9,11 +9,11 @@ from pycoral.utils.edgetpu import make_interpreter
 from pycoral.utils.edgetpu import run_inference
 
 def preprocess(img):
-    img = cv2.resize(img, (1344,448))
-    return (img).reshape(1,1344,448,3).astype(np.uint8)
+    img = cv2.resize(img, (336,112))
+    return (img).reshape(1,336,112,3).astype(np.uint8)
 
 def main():
-    default_model_dir = 'home/mendel/coral-test/'
+    default_model_dir = '/home/mendel/coral-test/'
     default_model = 'model1.tflite'
 #     default_labels = 'coco_labels.txt'
     parser = argparse.ArgumentParser()
@@ -41,12 +41,12 @@ def main():
         if not ret:
             break
         cv2_im = frame
-
-        cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
-        cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size).astype(np.int8)
+        frame = preprocess(frame)
+#         cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
+#         cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size).astype(np.int8)
 #         input_tensor = np.asarray(cv2_im_rgb).flatten()
 #         _, raw_result = engine.run_inference(input_tensor)
-        result = run_inference(interpreter, cv2_im_rgb)
+        result = run_inference(interpreter, frame)
 #         result = np.reshape(raw_result, inference_size)
 #         objs = get_objects(interpreter, args.threshold)[:args.top_k]
 #         cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels)
