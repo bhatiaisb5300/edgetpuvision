@@ -45,7 +45,7 @@ def main():
         if not ret:
             break
 #         cv2_im = frame
-        resized_img = frame.resize((336, 112), Image.ANTIALIAS)
+        resized_img = frame.resize(336, 112).astype(np.int8)
         common.set_input(interpreter, resized_img)
         interpreter.invoke()
         result = segment.get_output(interpreter)
