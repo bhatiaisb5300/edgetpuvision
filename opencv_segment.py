@@ -12,8 +12,8 @@ from pycoral.adapters import common
 from PIL import Image
 
 def preprocess(img):
-    img = cv2.resize(img, (336,112))
-    return (img).reshape(1,336,112,3).astype(np.int8)
+    img = cv2.resize(img, (112,336))
+    return (img).reshape(1,112,336,3).astype(np.int8)
 
 def main():
     default_model_dir = '/home/mendel/coral-test/'
@@ -60,7 +60,7 @@ def main():
 #         objs = get_objects(interpreter, args.threshold)[:args.top_k]
 #         cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels)
 
-        cv2.imshow('frame', result.reshape(336,112))
+        cv2.imshow('frame', result.reshape(112*2,336*2))
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
